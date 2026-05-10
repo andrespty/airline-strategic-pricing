@@ -27,7 +27,7 @@ function Navbar() {
 
 export default function App() {
   return (
-    <BrowserRouter basename="/bertrand-equilibrium">
+    <BrowserRouter basename="/airline-strategic-pricing">
       <Navbar />
       <main className="main-content">
         <Routes>
