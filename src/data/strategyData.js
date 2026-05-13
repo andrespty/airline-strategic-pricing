@@ -1,10 +1,18 @@
+// ─────────────────────────────────────────────────────────────
+// To use real NN data: place your JSON file at src/data/n2.json
+// with format: [{ "cost": 80.0, "price": 348.49 }, ...]
+// Then uncomment the import below and remove the placeholder.
+// ─────────────────────────────────────────────────────────────
+// import n2Data from './n2.json'
+
 const ALPHA = 500
 const BETA = 1.0
 const C_PARAM = 0.3
-const COST_MIN = 80
-const COST_MAX = 250
+export const COST_MIN = 80
+export const COST_MAX = 250
 
-function generateDummyStrategy(nFirms) {
+// Placeholder: replace with real data by importing your JSON above
+function generateStrategy(nFirms) {
   const points = []
   const steps = 100
   for (let i = 0; i <= steps; i++) {
@@ -18,9 +26,10 @@ function generateDummyStrategy(nFirms) {
 }
 
 export const strategyData = {
-  2: generateDummyStrategy(2),
-  3: generateDummyStrategy(3),
-  5: generateDummyStrategy(5),
+  // 2: n2Data.map(d => ({ cost: Math.round(d.cost*10)/10, price: Math.round(d.price*10)/10 })),
+  2: generateStrategy(2),
+  3: generateStrategy(3),
+  5: generateStrategy(5),
 }
 
 export function interpolatePrice(cost, nFirms) {
@@ -42,40 +51,14 @@ export function computeMetrics(myCost, myPrice, nFirms) {
   const avgCompetitorPrice = data.reduce((sum, d) => sum + d.price, 0) / data.length
   const totalCompetitorPrice = (nFirms - 1) * avgCompetitorPrice
   const quantity = Math.max(0, ALPHA - BETA * C_PARAM * (myPrice + totalCompetitorPrice))
-  const profit = (myPrice - myCost) * quantity
-  const markup = ((myPrice - myCost) / myCost) * 100
-  const winFrac = data.filter(d => d.price > myPrice).length / data.length
-  const winProb = Math.pow(winFrac, nFirms - 1) * 100
+  const profit = Math.round((myPrice - myCost) * quantity)
+  const profitPerSeat = Math.round(myPrice - myCost)
+  const markup = Math.round(((myPrice - myCost) / myCost) * 100 * 10) / 10
   return {
     quantity: Math.round(quantity),
-    profit: Math.round(profit),
-    markup: Math.round(markup * 10) / 10,
-    winProb: Math.round(winProb * 10) / 10,
+    profit,
+    profitPerSeat,
+    markup,
     avgCompetitorPrice: Math.round(avgCompetitorPrice * 10) / 10,
   }
 }
-
-export function getCompetitorDistribution(nFirms, myPrice) {
-  const data = strategyData[nFirms]
-  const minP = Math.min(...data.map(d => d.price))
-  const maxP = Math.max(...data.map(d => d.price))
-  const bins = 10
-  const binSize = (maxP - minP) / bins
-  const hist = Array.from({ length: bins }, (_, i) => ({
-    label: Math.round(minP + i * binSize),
-    count: 0,
-    belowMyPrice: false,
-  }))
-  data.forEach(d => {
-    const idx = Math.min(Math.floor((d.price - minP) / binSize), bins - 1)
-    hist[idx].count++
-  })
-  const maxCount = Math.max(...hist.map(b => b.count))
-  return hist.map(b => ({
-    ...b,
-    pct: Math.round((b.count / maxCount) * 100),
-    belowMyPrice: b.label < myPrice,
-  }))
-}
-
-export { COST_MIN, COST_MAX }

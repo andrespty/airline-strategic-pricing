@@ -16,10 +16,10 @@ export default function CompleteInfo() {
       <div className="ci-body">
         <div className="ci-icon">
           <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-            <rect x="1" y="1" width="46" height="46" rx="8" stroke="rgba(255,255,255,0.08)" strokeWidth="1"/>
-            <rect x="10" y="22" width="28" height="16" rx="3" stroke="rgba(255,255,255,0.15)" strokeWidth="1"/>
-            <path d="M18 22V16a6 6 0 0112 0v6" stroke="rgba(200,240,96,0.4)" strokeWidth="1.5" strokeLinecap="round"/>
-            <circle cx="24" cy="30" r="2" fill="rgba(200,240,96,0.4)"/>
+            <rect x="1" y="1" width="46" height="46" rx="8" stroke="rgba(61,102,68,0.2)" strokeWidth="1"/>
+            <rect x="10" y="22" width="28" height="16" rx="3" stroke="rgba(61,102,68,0.3)" strokeWidth="1"/>
+            <path d="M18 22V16a6 6 0 0112 0v6" stroke="#3d6644" strokeWidth="1.5" strokeLinecap="round"/>
+            <circle cx="24" cy="30" r="2" fill="#3d6644"/>
           </svg>
         </div>
 
@@ -37,7 +37,7 @@ export default function CompleteInfo() {
               <li>Set costs for both firms directly via sliders</li>
               <li>Analytical Nash Equilibrium prices computed in real time</li>
               <li>Equilibrium profits and market shares</li>
-              <li>Side-by-side comparison with the Bayesian (incomplete info) case</li>
+              <li>Side-by-side comparison with the Bayesian case</li>
               <li>How equilibrium prices shift as cost asymmetry increases</li>
             </ul>
           </div>

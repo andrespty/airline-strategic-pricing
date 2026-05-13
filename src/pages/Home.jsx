@@ -4,43 +4,37 @@ import './Home.css'
 function GameDiagram() {
   return (
     <svg className="game-diagram" viewBox="0 0 600 220" fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* Firm 1 */}
-      <rect x="20" y="60" width="140" height="80" rx="6" fill="#1a1a1a" stroke="rgba(255,255,255,0.1)" strokeWidth="1"/>
-      <text x="90" y="92" textAnchor="middle" fontFamily="DM Sans" fontSize="12" fontWeight="500" fill="#f0ede6">Firm 1</text>
-      <text x="90" y="112" textAnchor="middle" fontFamily="DM Mono" fontSize="11" fill="#8a8880">cost c₁ ~ U[80,250]</text>
-      <text x="90" y="128" textAnchor="middle" fontFamily="DM Mono" fontSize="11" fill="rgba(200,240,96,0.7)">private</text>
+      <rect x="20" y="60" width="145" height="82" rx="6" fill="#eef2e8" stroke="rgba(61,102,68,0.15)" strokeWidth="1"/>
+      <text x="92" y="92" textAnchor="middle" fontFamily="DM Sans" fontSize="12" fontWeight="500" fill="#141a13">Firm 1</text>
+      <text x="92" y="111" textAnchor="middle" fontFamily="DM Mono" fontSize="10" fill="#5a6e58">cost c₁ ~ U[80,250]</text>
+      <text x="92" y="128" textAnchor="middle" fontFamily="DM Mono" fontSize="10" fill="#3d6644">private</text>
 
-      {/* Firm 2 */}
-      <rect x="440" y="60" width="140" height="80" rx="6" fill="#1a1a1a" stroke="rgba(255,255,255,0.1)" strokeWidth="1"/>
-      <text x="510" y="92" textAnchor="middle" fontFamily="DM Sans" fontSize="12" fontWeight="500" fill="#f0ede6">Firm 2</text>
-      <text x="510" y="112" textAnchor="middle" fontFamily="DM Mono" fontSize="11" fill="#8a8880">cost c₂ ~ U[80,250]</text>
-      <text x="510" y="128" textAnchor="middle" fontFamily="DM Mono" fontSize="11" fill="rgba(200,240,96,0.7)">private</text>
+      <rect x="435" y="60" width="145" height="82" rx="6" fill="#eef2e8" stroke="rgba(61,102,68,0.15)" strokeWidth="1"/>
+      <text x="508" y="92" textAnchor="middle" fontFamily="DM Sans" fontSize="12" fontWeight="500" fill="#141a13">Firm 2</text>
+      <text x="508" y="111" textAnchor="middle" fontFamily="DM Mono" fontSize="10" fill="#5a6e58">cost c₂ ~ U[80,250]</text>
+      <text x="508" y="128" textAnchor="middle" fontFamily="DM Mono" fontSize="10" fill="#3d6644">private</text>
 
-      {/* Market center */}
-      <rect x="220" y="75" width="160" height="50" rx="6" fill="#1a1a1a" stroke="rgba(200,240,96,0.2)" strokeWidth="1"/>
-      <text x="300" y="97" textAnchor="middle" fontFamily="DM Sans" fontSize="11" fill="#8a8880">Market demand</text>
-      <text x="300" y="113" textAnchor="middle" fontFamily="DM Mono" fontSize="10" fill="#555350">q = α − β·c·Σpⱼ</text>
+      <rect x="218" y="74" width="164" height="52" rx="6" fill="#fff" stroke="rgba(61,102,68,0.25)" strokeWidth="1"/>
+      <text x="300" y="97" textAnchor="middle" fontFamily="DM Sans" fontSize="11" fill="#5a6e58">Market demand</text>
+      <text x="300" y="114" textAnchor="middle" fontFamily="DM Mono" fontSize="10" fill="#8e9e8c">q = α − β·c·Σpⱼ</text>
 
-      {/* Arrows from firms to market */}
-      <line x1="160" y1="100" x2="218" y2="100" stroke="rgba(255,255,255,0.2)" strokeWidth="1"/>
-      <polygon points="218,96 226,100 218,104" fill="rgba(255,255,255,0.2)"/>
-      <text x="188" y="93" textAnchor="middle" fontFamily="DM Mono" fontSize="10" fill="#555350">p₁</text>
+      <line x1="165" y1="100" x2="216" y2="100" stroke="rgba(61,102,68,0.3)" strokeWidth="1"/>
+      <polygon points="216,96.5 222,100 216,103.5" fill="rgba(61,102,68,0.3)"/>
+      <text x="190" y="93" textAnchor="middle" fontFamily="DM Mono" fontSize="9" fill="#8e9e8c">p₁</text>
 
-      <line x1="440" y1="100" x2="382" y2="100" stroke="rgba(255,255,255,0.2)" strokeWidth="1"/>
-      <polygon points="382,96 374,100 382,104" fill="rgba(255,255,255,0.2)"/>
-      <text x="412" y="93" textAnchor="middle" fontFamily="DM Mono" fontSize="10" fill="#555350">p₂</text>
+      <line x1="435" y1="100" x2="384" y2="100" stroke="rgba(61,102,68,0.3)" strokeWidth="1"/>
+      <polygon points="384,96.5 378,100 384,103.5" fill="rgba(61,102,68,0.3)"/>
+      <text x="410" y="93" textAnchor="middle" fontFamily="DM Mono" fontSize="9" fill="#8e9e8c">p₂</text>
 
-      {/* BNE label below */}
-      <text x="300" y="168" textAnchor="middle" fontFamily="DM Sans" fontSize="11" fill="#555350">Each firm sets price to maximize expected profit</text>
-      <text x="300" y="185" textAnchor="middle" fontFamily="DM Sans" fontSize="11" fill="#555350">given uncertainty about the competitor's cost</text>
+      <text x="300" y="168" textAnchor="middle" fontFamily="DM Sans" fontSize="11" fill="#8e9e8c">Each firm sets price to maximize expected profit</text>
+      <text x="300" y="185" textAnchor="middle" fontFamily="DM Sans" fontSize="11" fill="#8e9e8c">given uncertainty about the competitor's cost</text>
 
-      {/* Nature node at top */}
-      <circle cx="300" cy="24" r="16" fill="#1a1a1a" stroke="rgba(200,240,96,0.3)" strokeWidth="1"/>
-      <text x="300" y="28" textAnchor="middle" fontFamily="DM Mono" fontSize="10" fill="rgba(200,240,96,0.7)">N</text>
-      <line x1="284" y1="30" x2="150" y2="65" stroke="rgba(200,240,96,0.15)" strokeWidth="1" strokeDasharray="3 3"/>
-      <line x1="316" y1="30" x2="450" y2="65" stroke="rgba(200,240,96,0.15)" strokeWidth="1" strokeDasharray="3 3"/>
-      <text x="200" y="52" textAnchor="middle" fontFamily="DM Mono" fontSize="9" fill="#555350">draws c₁</text>
-      <text x="400" y="52" textAnchor="middle" fontFamily="DM Mono" fontSize="9" fill="#555350">draws c₂</text>
+      <circle cx="300" cy="24" r="16" fill="#fff" stroke="rgba(61,102,68,0.3)" strokeWidth="1"/>
+      <text x="300" y="28" textAnchor="middle" fontFamily="DM Mono" fontSize="10" fill="#3d6644">N</text>
+      <line x1="285" y1="30" x2="148" y2="65" stroke="rgba(61,102,68,0.15)" strokeWidth="1" strokeDasharray="3 3"/>
+      <line x1="315" y1="30" x2="452" y2="65" stroke="rgba(61,102,68,0.15)" strokeWidth="1" strokeDasharray="3 3"/>
+      <text x="200" y="52" textAnchor="middle" fontFamily="DM Mono" fontSize="9" fill="#8e9e8c">draws c₁</text>
+      <text x="400" y="52" textAnchor="middle" fontFamily="DM Mono" fontSize="9" fill="#8e9e8c">draws c₂</text>
     </svg>
   )
 }

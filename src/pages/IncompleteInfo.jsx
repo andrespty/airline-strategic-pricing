@@ -1,15 +1,36 @@
 import { useState, useMemo } from 'react'
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
-  ReferenceLine, ResponsiveContainer, Area, AreaChart
+  ReferenceLine, ResponsiveContainer
 } from 'recharts'
 import {
   strategyData, interpolatePrice, computeMetrics,
-  getCompetitorDistribution, COST_MIN, COST_MAX
+  COST_MIN, COST_MAX
 } from '../data/strategyData'
 import './IncompleteInfo.css'
 
 const N_OPTIONS = [2, 3, 5]
+
+const N_STYLES = {
+  2: { stroke: '#3d6644', strokeWidth: 2.5, strokeDasharray: null,  label: 'N = 2' },
+  3: { stroke: '#3d6644', strokeWidth: 1.5, strokeDasharray: '6 3', label: 'N = 3' },
+  5: { stroke: '#3d6644', strokeWidth: 1.5, strokeDasharray: '2 3', label: 'N = 5' },
+}
+
+// Merge all three datasets into one array keyed by cost for Recharts
+function buildChartData() {
+  const map = {}
+  for (const n of N_OPTIONS) {
+    for (const d of strategyData[n]) {
+      const key = Math.round(d.cost * 10) / 10
+      if (!map[key]) map[key] = { cost: key }
+      map[key][`price_${n}`] = d.price
+    }
+  }
+  return Object.values(map).sort((a, b) => a.cost - b.cost)
+}
+
+const chartData = buildChartData()
 
 function StatCard({ label, value, sub, accent }) {
   return (
@@ -26,7 +47,16 @@ function CustomTooltip({ active, payload, label }) {
   return (
     <div className="chart-tooltip">
       <div className="tt-row"><span className="tt-key">cost</span><span className="tt-val">{label}</span></div>
-      <div className="tt-row"><span className="tt-key">price β(c)</span><span className="tt-val tt-accent">{payload[0]?.value}</span></div>
+      {N_OPTIONS.map(n => {
+        const entry = payload.find(p => p.dataKey === `price_${n}`)
+        if (!entry) return null
+        return (
+          <div className="tt-row" key={n}>
+            <span className="tt-key">N = {n}</span>
+            <span className="tt-val tt-accent">{entry.value}</span>
+          </div>
+        )
+      })}
     </div>
   )
 }
@@ -37,8 +67,6 @@ export default function IncompleteInfo() {
 
   const myPrice = useMemo(() => interpolatePrice(cost, nFirms), [cost, nFirms])
   const metrics = useMemo(() => computeMetrics(cost, myPrice, nFirms), [cost, myPrice, nFirms])
-  const distData = useMemo(() => getCompetitorDistribution(nFirms, myPrice), [nFirms, myPrice])
-  const chartData = strategyData[nFirms]
 
   return (
     <div className="ii-page">
@@ -63,59 +91,98 @@ export default function IncompleteInfo() {
 
       <div className="ii-note">
         <span className="ii-note-dot" />
-        Using placeholder strategy data. Replace <code>src/data/strategyData.js</code> with real NN output to update all charts and metrics automatically.
+        N = 2 uses real NN output. N = 3 and N = 5 use placeholder strategies — update <code>strategyData.js</code> when models are trained.
       </div>
 
       <div className="ii-layout">
-        {/* Main chart */}
         <div className="ii-chart-panel">
           <div className="ii-chart-header">
-            <div className="ii-chart-title">Equilibrium strategy β(c)</div>
-            <div className="ii-chart-sub">Optimal price as a function of private cost</div>
+            <div className="ii-chart-title">Equilibrium strategy β(c) — all firm counts</div>
+            <div className="ii-chart-sub">Optimal price as a function of private cost · selected N highlighted</div>
           </div>
+
           <div className="ii-chart-wrap">
             <ResponsiveContainer width="100%" height={320}>
-              <LineChart data={chartData} margin={{ top: 10, right: 20, bottom: 10, left: 10 }}>
-                <CartesianGrid stroke="rgba(255,255,255,0.04)" strokeDasharray="0" />
+              <LineChart data={chartData} margin={{ top: 10, right: 20, bottom: 24, left: 10 }}>
+                <CartesianGrid stroke="rgba(61,102,68,0.07)" strokeDasharray="0" />
                 <XAxis
                   dataKey="cost"
-                  tick={{ fontFamily: 'DM Mono', fontSize: 11, fill: '#555350' }}
+                  type="number"
+                  domain={['dataMin', 'dataMax']}
+                  ticks={[80, 110, 140, 170, 200, 230, 250]}
+                  tick={{ fontFamily: 'DM Mono', fontSize: 11, fill: '#8e9e8c' }}
                   tickLine={false}
-                  axisLine={{ stroke: 'rgba(255,255,255,0.08)' }}
-                  label={{ value: 'cost c', position: 'insideBottom', offset: -4, fontFamily: 'DM Mono', fontSize: 11, fill: '#555350' }}
+                  axisLine={{ stroke: 'rgba(61,102,68,0.15)' }}
+                  label={{ value: 'cost c', position: 'insideBottom', offset: -10, fontFamily: 'DM Mono', fontSize: 11, fill: '#8e9e8c' }}
                 />
                 <YAxis
-                  tick={{ fontFamily: 'DM Mono', fontSize: 11, fill: '#555350' }}
+                  domain={['auto', 'auto']}
+                  tick={{ fontFamily: 'DM Mono', fontSize: 11, fill: '#8e9e8c' }}
                   tickLine={false}
                   axisLine={false}
-                  label={{ value: 'price β(c)', angle: -90, position: 'insideLeft', fontFamily: 'DM Mono', fontSize: 11, fill: '#555350' }}
+                  label={{ value: 'price β(c)', angle: -90, position: 'insideLeft', fontFamily: 'DM Mono', fontSize: 11, fill: '#8e9e8c' }}
                 />
                 <Tooltip content={<CustomTooltip />} />
+
                 <ReferenceLine
                   x={cost}
-                  stroke="rgba(200,240,96,0.5)"
+                  stroke="#3d6644"
                   strokeWidth={1}
                   strokeDasharray="4 3"
                 />
                 <ReferenceLine
                   y={myPrice}
-                  stroke="rgba(200,240,96,0.2)"
+                  stroke="#8e9e8c"
                   strokeWidth={1}
                   strokeDasharray="4 3"
                 />
-                <Line
-                  type="monotone"
-                  dataKey="price"
-                  stroke="#c8f060"
-                  strokeWidth={2}
-                  dot={false}
-                  activeDot={{ r: 4, fill: '#c8f060', strokeWidth: 0 }}
-                />
+
+                {N_OPTIONS.map(n => {
+                  const isActive = n === nFirms
+                  const style = N_STYLES[n]
+                  return (
+                    <Line
+                      key={n}
+                      type="monotone"
+                      dataKey={`price_${n}`}
+                      stroke={style.stroke}
+                      strokeWidth={isActive ? style.strokeWidth + 0.5 : 1}
+                      strokeDasharray=""
+                      strokeOpacity={isActive ? 1 : 0.2}
+                      dot={false}
+                      isAnimationActive={false}
+                      activeDot={isActive ? { r: 4, fill: '#3d6644', strokeWidth: 0 } : false}
+                    />
+                  )
+                })}
               </LineChart>
             </ResponsiveContainer>
           </div>
 
-          {/* Cost slider */}
+          {/* Legend */}
+          <div className="ii-legend">
+            {N_OPTIONS.map(n => (
+              <div
+                key={n}
+                className={`ii-legend-item ${nFirms === n ? 'active' : ''}`}
+                onClick={() => setNFirms(n)}
+              >
+                <svg width="24" height="10" viewBox="0 0 24 10">
+                  <line
+                    x1="0" y1="5" x2="24" y2="5"
+                    stroke="#3d6644"
+                    strokeWidth={N_STYLES[n].strokeWidth}
+                    strokeDasharray=""
+                    strokeOpacity={nFirms === n ? 1 : 0.3}
+                  />
+                </svg>
+                <span>{N_STYLES[n].label}</span>
+                {n !== 2 && <span className="ii-legend-placeholder">placeholder</span>}
+              </div>
+            ))}
+          </div>
+
+          {/* Slider */}
           <div className="ii-slider-section">
             <div className="ii-slider-header">
               <span className="ii-slider-label">Your private cost</span>
@@ -152,45 +219,32 @@ export default function IncompleteInfo() {
               sub={`${myPrice} − ${cost}`}
             />
             <StatCard
-              label="Win probability"
-              value={`${metrics.winProb}%`}
-              sub={`beat all ${nFirms - 1} competitor${nFirms > 2 ? 's' : ''}`}
+              label="Expected profit"
+              value={`$${metrics.profit.toLocaleString()}`}
+              sub={`per seat: $${metrics.profitPerSeat}`}
             />
             <StatCard
               label="Expected quantity"
-              value={metrics.quantity}
+              value={metrics.quantity.toLocaleString()}
               sub="units sold"
             />
-          </div>
-
-          <div className="ii-dist-panel">
-            <div className="ii-dist-title">Competitor price distribution</div>
-            <div className="ii-dist-sub">Equilibrium prices across all cost realizations</div>
-            <div className="ii-dist-bars">
-              {distData.map((bin, i) => (
-                <div key={i} className="ii-dist-row">
-                  <span className="ii-dist-price">{bin.label}</span>
-                  <div className="ii-dist-track">
-                    <div
-                      className={`ii-dist-fill ${bin.belowMyPrice ? 'below' : 'above'}`}
-                      style={{ width: `${bin.pct}%` }}
-                    />
-                  </div>
-                </div>
-              ))}
-              <div className="ii-dist-legend">
-                <span className="ii-legend-item"><span className="ii-legend-dot below-dot" />below your price (you win)</span>
-                <span className="ii-legend-item"><span className="ii-legend-dot above-dot" />above your price (you lose)</span>
-              </div>
-            </div>
           </div>
 
           <div className="ii-insight">
             <div className="ii-insight-label">Equilibrium insight</div>
             <p>
-              With N = {nFirms} firm{nFirms > 1 ? 's' : ''}, a cost of <code>{cost}</code> maps
+              With <code>N = {nFirms}</code> firm{nFirms > 1 ? 's' : ''}, a cost of <code>{cost}</code> maps
               to an optimal price of <code>{myPrice}</code> — a <code>{metrics.markup}%</code> markup.
               {nFirms > 2 && ' More competitors compress margins toward cost.'}
+            </p>
+          </div>
+
+          <div className="ii-n-story">
+            <div className="ii-n-story-label">What changes with N?</div>
+            <p>
+              As more firms enter the market, equilibrium prices compress downward toward marginal cost.
+              Each firm's strategy curve shifts lower — the same private cost leads to a lower optimal price
+              when facing more competition.
             </p>
           </div>
         </div>
