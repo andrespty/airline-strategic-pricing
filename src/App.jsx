@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom'
 import Home from './pages/Home'
-import CompleteInfo from './pages/CompleteInfo'
+// import CompleteInfo from './pages/CompleteInfo'
 import IncompleteInfo from './pages/IncompleteInfo'
 import './App.css'
 
@@ -14,7 +14,7 @@ function Navbar() {
       </div>
       <div className="navbar-links">
         <NavLink to="/" end className={({isActive}) => isActive ? 'nav-link active' : 'nav-link'}>Home</NavLink>
-        <NavLink to="/complete" className={({isActive}) => isActive ? 'nav-link active' : 'nav-link'}>Complete info</NavLink>
+        {/* <NavLink to="/complete" className={({isActive}) => isActive ? 'nav-link active' : 'nav-link'}>Complete info</NavLink> */}
         <NavLink to="/incomplete" className={({isActive}) => isActive ? 'nav-link active' : 'nav-link'}>Incomplete info</NavLink>
       </div>
       <a href="https://github.com/andrespty" target="_blank" rel="noopener noreferrer" className="navbar-github">
@@ -32,7 +32,7 @@ export default function App() {
       <main className="main-content">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/complete" element={<CompleteInfo />} />
+          {/* <Route path="/complete" element={<CompleteInfo />} /> */}
           <Route path="/incomplete" element={<IncompleteInfo />} />
         </Routes>
       </main>

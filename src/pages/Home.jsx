@@ -146,12 +146,12 @@ export default function Home() {
       </div>
 
       <div className="home-cta">
-        <div className="cta-card">
+        {/* <div className="cta-card">
           <div className="cta-tag">Coming soon</div>
           <h3>Complete information</h3>
           <p>All firms' costs are publicly known. Equilibrium computed analytically. Compare with the Bayesian case.</p>
           <Link to="/complete" className="cta-btn cta-btn-ghost">View page →</Link>
-        </div>
+        </div> */}
         <div className="cta-card cta-card-accent">
           <div className="cta-tag cta-tag-accent">Interactive</div>
           <h3>Incomplete information</h3>

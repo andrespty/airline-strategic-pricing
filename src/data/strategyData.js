@@ -1,9 +1,6 @@
-// ─────────────────────────────────────────────────────────────
-// To use real NN data: place your JSON file at src/data/n2.json
-// with format: [{ "cost": 80.0, "price": 348.49 }, ...]
-// Then uncomment the import below and remove the placeholder.
-// ─────────────────────────────────────────────────────────────
-// import n2Data from './n2.json'
+import n2Data from './n2.json'
+import n3Data from './n3.json'
+import n5Data from './n5.json'
 
 const ALPHA = 500
 const BETA = 1.0
@@ -11,25 +8,10 @@ const C_PARAM = 0.3
 export const COST_MIN = 80
 export const COST_MAX = 250
 
-// Placeholder: replace with real data by importing your JSON above
-function generateStrategy(nFirms) {
-  const points = []
-  const steps = 100
-  for (let i = 0; i <= steps; i++) {
-    const cost = COST_MIN + (i / steps) * (COST_MAX - COST_MIN)
-    const markupFactor = nFirms === 2 ? 0.42 : nFirms === 3 ? 0.28 : 0.18
-    const baseOffset = nFirms === 2 ? 68 : nFirms === 3 ? 44 : 28
-    const price = cost + baseOffset + markupFactor * (cost - COST_MIN)
-    points.push({ cost: Math.round(cost * 10) / 10, price: Math.round(price * 10) / 10 })
-  }
-  return points
-}
-
 export const strategyData = {
-  // 2: n2Data.map(d => ({ cost: Math.round(d.cost*10)/10, price: Math.round(d.price*10)/10 })),
-  2: generateStrategy(2),
-  3: generateStrategy(3),
-  5: generateStrategy(5),
+  2: n2Data.map(d => ({ cost: Math.round(d.cost*10)/10, price: Math.round(d.price*10)/10 })),
+  3: n3Data.map(d => ({ cost: Math.round(d.cost*10)/10, price: Math.round(d.price*10)/10 })),
+  5: n5Data.map(d => ({ cost: Math.round(d.cost*10)/10, price: Math.round(d.price*10)/10 })),
 }
 
 export function interpolatePrice(cost, nFirms) {
@@ -50,7 +32,8 @@ export function computeMetrics(myCost, myPrice, nFirms) {
   const data = strategyData[nFirms]
   const avgCompetitorPrice = data.reduce((sum, d) => sum + d.price, 0) / data.length
   const totalCompetitorPrice = (nFirms - 1) * avgCompetitorPrice
-  const quantity = Math.max(0, ALPHA - BETA * C_PARAM * (myPrice + totalCompetitorPrice))
+  // const quantity = Math.max(0, ALPHA - BETA * C_PARAM * (myPrice + totalCompetitorPrice))
+  const quantity = Math.max(0, ALPHA - BETA * myPrice + C_PARAM * totalCompetitorPrice)
   const profit = Math.round((myPrice - myCost) * quantity)
   const profitPerSeat = Math.round(myPrice - myCost)
   const markup = Math.round(((myPrice - myCost) / myCost) * 100 * 10) / 10

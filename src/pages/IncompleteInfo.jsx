@@ -89,11 +89,6 @@ export default function IncompleteInfo() {
         </div>
       </div>
 
-      <div className="ii-note">
-        <span className="ii-note-dot" />
-        N = 2 uses real NN output. N = 3 and N = 5 use placeholder strategies — update <code>strategyData.js</code> when models are trained.
-      </div>
-
       <div className="ii-layout">
         <div className="ii-chart-panel">
           <div className="ii-chart-header">
@@ -177,7 +172,7 @@ export default function IncompleteInfo() {
                   />
                 </svg>
                 <span>{N_STYLES[n].label}</span>
-                {n !== 2 && <span className="ii-legend-placeholder">placeholder</span>}
+                
               </div>
             ))}
           </div>
@@ -229,22 +224,23 @@ export default function IncompleteInfo() {
               sub="units sold"
             />
           </div>
-
           <div className="ii-insight">
             <div className="ii-insight-label">Equilibrium insight</div>
             <p>
               With <code>N = {nFirms}</code> firm{nFirms > 1 ? 's' : ''}, a cost of <code>{cost}</code> maps
-              to an optimal price of <code>{myPrice}</code> — a <code>{metrics.markup}%</code> markup.
-              {nFirms > 2 && ' More competitors compress margins toward cost.'}
+              to an equilibrium price of <code>{myPrice}</code> — a <code>{metrics.markup}%</code> markup.
+              {nFirms >= 5 && ' At this competitor count, strategic feedback loops are strong — interpret prices with caution.'}
             </p>
           </div>
 
           <div className="ii-n-story">
             <div className="ii-n-story-label">What changes with N?</div>
             <p>
-              As more firms enter the market, equilibrium prices compress downward toward marginal cost.
-              Each firm's strategy curve shifts lower — the same private cost leads to a lower optimal price
-              when facing more competition.
+              In differentiated markets, more competitors can push prices <em>up</em>, not down.
+              When a rival raises fares, you capture some of their passengers — so your best response
+              is to raise yours too. With more firms, these feedback loops multiply. At low N this
+              produces modest markups. At high N the loops amplify each other strongly, and the
+              linear demand model approaches its limits.
             </p>
           </div>
         </div>
